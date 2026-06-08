@@ -1,13 +1,28 @@
+#include <stdlib.h>
+#include <stddef.h>
 #include "memory_manager.h"
 
-/*
-Implementar unión de bloques libres.
+// Coalescencia: Une bloques libres contiguos para mitigar fragmentación
+void mm_coalesce(MemoryManager* mm) {
+    if (!mm || !mm->head) return;
 
-Ejemplo:
+    MemoryBlock* curr = mm->head;
 
-[P1][Libre][Libre][P2]
+    while (curr != NULL && curr->next != NULL) {
+        if (curr->free && curr->next->free) {
+            MemoryBlock* block_to_delete = curr->next;
 
-↓
+            curr->size += block_to_delete->size;
+            curr->next = block_to_delete->next;
 
-[P1][Libre Grande][P2]
-*/
+            if (block_to_delete->next != NULL) {
+                block_to_delete->next->prev = curr;
+            }
+
+            free(block_to_delete);
+            // No avanzamos 'curr' por si hay más bloques libres seguidos
+        } else {
+            curr = curr->next;
+        }
+    }
+}

@@ -1,5 +1,12 @@
 #include <stdio.h>
 
+void test_stack_push_pop(void);
+void test_stack_empty(void);
+void test_queue_fifo(void);
+void test_round_robin_behavior(void);
+void test_fifo_scheduler(void);
+void test_first_fit(void);
+
 int main() {
     printf("Running integration tests...\n");
 
